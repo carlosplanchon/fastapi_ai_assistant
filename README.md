@@ -2,6 +2,8 @@
 
 This repository contains a **FastAPI** application that demonstrates the **OpenAI Assistants QuickStart** guide, as shown in the [official documentation](https://platform.openai.com/docs/assistants/quickstart). It implements the step-by-step instructions for creating an Assistant (including Code Interpreter), creating Threads for conversation, adding Messages, and streaming a Run using Server-Sent Events (SSE).
 
+![Chat interface screenshot](assets/chat_screenshot.png)
+
 ---
 
 ## Overview
