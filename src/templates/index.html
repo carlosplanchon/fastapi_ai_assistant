@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Chat App</title>
+  <!-- TailwindCSS (CDN for demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 py-10">
+  <div class="max-w-2xl mx-auto p-4 bg-white rounded shadow" x-data="chatApp()">
+    <h1 class="text-2xl font-bold mb-4">AI Chat</h1>
+
+    <!-- The conversation messages -->
+    <div class="space-y-2 mb-4 max-h-96 overflow-y-auto">
+      <template x-for="(msg, idx) in messages" :key="idx">
+        <div
+          :class="msg.sender === 'user' ? 'text-right' : 'text-left'"
+        >
+          <p
+            class="inline-block px-3 py-2 rounded"
+            :class="msg.sender === 'user'
+              ? 'bg-blue-100 text-blue-700'
+              : 'bg-gray-200 text-gray-700'"
+          >
+            <!-- Display the message text -->
+            <span x-text="msg.text"></span>
+          </p>
+        </div>
+      </template>
+    </div>
+
+    <!-- Input and buttons area -->
+    <form @submit.prevent="sendMessage" class="flex items-center space-x-2">
+      <input
+        x-model="newMessage"
+        type="text"
+        class="border border-gray-300 rounded px-2 py-1 w-full"
+        placeholder="Type your message..."
+        :disabled="streaming"
+      /> <!-- Optionally disable while streaming -->
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        :disabled="streaming"
+      >
+        Send
+      </button>
+      <!-- Stop button -->
+      <button
+        type="button"
+        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        x-show="streaming"
+        @click="stopStreaming"
+      >
+        Stop
+      </button>
+    </form>
+  </div>
+
+  <script>
+    function chatApp() {
+      return {
+        messages: [],
+        newMessage: "",
+        currentEventSource: null,
+        streaming: false,
+
+        async sendMessage() {
+          const prompt = this.newMessage.trim();
+          if (!prompt) return;
+
+          // 1) Push the user's message to the list
+          this.messages.push({ sender: "user", text: prompt });
+          this.newMessage = "";
+
+          // 2) Create an SSE connection
+          const url = `{{ root_prefix }}/chat-stream?prompt=${encodeURIComponent(prompt)}`;
+          const eventSource = new EventSource(url);
+
+          this.currentEventSource = eventSource;
+          this.streaming = true;
+
+          // We'll store the partial response for the assistant here
+          let assistantIndex = null;
+
+          eventSource.onmessage = (event) => {
+            const chunk = event.data;
+
+            // If the chunk is "[DONE]", close the SSE stream
+            if (chunk === "[DONE]") {
+              this.stopStreaming();  // close and reset
+              return;
+            }
+
+            // If we haven't created an "assistant" message yet, do so now
+            if (assistantIndex === null) {
+              assistantIndex = this.messages.push({
+                sender: "assistant",
+                text: ""
+              }) - 1; // store the new message's index
+            }
+
+            // Append the chunk to the assistant's text
+            this.messages[assistantIndex].text += chunk;
+          };
+
+          eventSource.onerror = (error) => {
+            console.error("SSE error:", error);
+            this.stopStreaming();
+          };
+        },
+
+        stopStreaming() {
+          if (this.currentEventSource) {
+            this.currentEventSource.close();
+            this.currentEventSource = null;
+          }
+          this.streaming = false;
+        },
+      };
+    }
+  </script>
+</body>
+</html>
