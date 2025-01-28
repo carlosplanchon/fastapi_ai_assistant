@@ -10,3 +10,8 @@ python-multipart
 ####################
 jinja2
 sse_starlette
+
+###############
+# --- LLM --- #
+###############
+openai

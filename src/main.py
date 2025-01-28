@@ -86,7 +86,7 @@ class SSEEventHandler(AssistantEventHandler):
 # Setup Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
-root_path: str = CONFIG["ROOT_PATH"]
+root_path: str = CONFIG["app"]["ROOT_PATH"]
 
 if root_path != "":
     root_prefix = f"/{root_path}"
