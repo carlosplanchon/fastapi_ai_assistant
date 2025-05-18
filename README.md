@@ -27,6 +27,8 @@ pip install outfancy
 - Do Oneline printing, useful for real-time applications (report in screen function).
 - Add colors to the field of the tables.
 
+### DeepWiki Docs: [https://deepwiki.com/carlosplanchon/outfancy](https://deepwiki.com/carlosplanchon/outfancy)
+
 ## usage
 ### In the interpreter
 # Table.
