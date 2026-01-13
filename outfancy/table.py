@@ -8,6 +8,8 @@ from .example_dataset import dataset
 
 from string import ascii_letters
 
+import shutil
+
 
 logging.basicConfig(
     # filename='/tmp/outfancy/latest.log',
@@ -231,8 +233,6 @@ class Table:
         width=None,
         row_separator=None,
         page=None,
-        screen_x=None,
-        screen_y=None
             ):
 
         """
@@ -302,10 +302,7 @@ class Table:
         # --- PRE-RENDER AREA --- #
         ###########################
         # --- The screen measures are obtained. --- #
-        screen_x, screen_y = widgets.measure_screen(
-            screen_x=screen_x,
-            screen_y=screen_y
-            )
+        screen_x, screen_y = shutil.get_terminal_size()
 
         # --- The correction value is applied to screen_x. --- #
         screen_x += self.corrector
@@ -1809,7 +1806,7 @@ class Oneline:
             )
 
         # --- The screen measures are obtained. --- #
-        screen_x, screen_y = widgets.measure_screen()
+        screen_x, screen_y = shutil.get_terminal_size()
 
         # --- The validity of provided order is checked. --- #
         order = self.table.check_order(
@@ -2050,7 +2047,7 @@ class LargeTable:
         # --- PRE-RENDER AREA --- #
         ###########################
         # --- The screen measures are obtained --- #
-        screen_x, screen_y = widgets.measure_screen()
+        screen_x, screen_y = shutil.get_terminal_size()
 
         # --- The correction value is applied to screen_x --- #
         screen_x += self.table.corrector

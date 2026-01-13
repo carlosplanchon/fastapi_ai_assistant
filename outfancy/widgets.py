@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 
-import fcntl
-import os
-import struct
-import termios
-
 from datetime import datetime
 from re import sub
 from time import strptime
@@ -13,13 +8,13 @@ from time import strptime
 def actual_date():
     """This function return the actual date."""
     now = datetime.now()
-    return f'{now.day}-{now.month}-{now.year}'
+    return f"{now.day}-{now.month}-{now.year}"
 
 
 def actual_hour():
     """This function return the actual hour."""
     now = datetime.now()
-    return f'{now.hour}:{now.minute}:{now.second}'
+    return f"{now.hour}:{now.minute}:{now.second}"
 
 
 def compress_list(list_to_compress):
@@ -55,7 +50,7 @@ def compress_list(list_to_compress):
     return compressed_list
 
 
-def create_matrix(x, y, fill=''):
+def create_matrix(x, y, fill=""):
     """This function create a 2d matrix based on it dimensions."""
     return [[fill for p in range(x)] for p in range(y)]
 
@@ -67,7 +62,7 @@ def index_is_in_list(the_list, index):
 
 def is_complete_hour(text):
     """This function check if the input is a valid complete hour."""
-    for fmt in ['%H:%M:%S', '%H:%M']:
+    for fmt in ["%H:%M:%S", "%H:%M"]:
         try:
             strptime(text, fmt)
             return True
@@ -83,11 +78,12 @@ def is_date(text):
     and: "d-m-yy, d-m-yyyy, h-m-s"
     """
     text = normalise_date(text)
-    for fmt in ['%d-%m-%Y',
-                '%d-%m-%y',
-                '%d-%m-%Y %H-%M-%S',
-                '%d-%m-%y %H-%M-%S'
-                ]:
+    for fmt in [
+        "%d-%m-%Y",
+        "%d-%m-%y",
+        "%d-%m-%Y %H-%M-%S",
+        "%d-%m-%y %H-%M-%S"
+            ]:
         try:
             strptime(text, fmt)
             return True
@@ -103,57 +99,20 @@ def printed_length(text):
     return len(remove_colors(text))
 
 
-def measure_screen(screen_x=None, screen_y=None):
-    """
-    Measure the screen dimensions (in characters),
-    returning two values, X and Y.
-    """
-    env = os.environ
-
-    def ioctl_GWINSZ(fd):
-        try:
-            cr = struct.unpack(
-                'hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234')
-                )
-        except Exception:
-            return
-        return cr
-
-    cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-    if not cr:
-        try:
-            fd = os.open(os.ctermid(), os.O_RDONLY)
-            cr = ioctl_GWINSZ(fd)
-            os.close(fd)
-        except Exception:
-            pass
-
-    if not cr:
-        cr = (env.get('LINES', 25), env.get('COLUMNS', 80))
-
-    if screen_x is None:
-        screen_x = int(cr[1])
-
-    if screen_y is None:
-        screen_y = int(cr[0])
-
-    return screen_x, screen_y
-
-
 def normalise_date(text):
     """This function normalize text, is useful to normalize dates."""
     text = text.replace(
-        '/', '-').replace(
-        ':', '-').replace(
-        '.', '-').replace(
-        '@', '-')
+        "/", "-").replace(
+        ":", "-").replace(
+        ".", "-").replace(
+        "@", "-")
     return text
 
 
 def remove_colors(text):
     """This function remove the ANSI color codes of a string."""
     return sub(
-        r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?',
-        '',
+        r"\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?",
+        "",
         text
-        )
+    )

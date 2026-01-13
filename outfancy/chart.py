@@ -5,6 +5,8 @@ from .window import Window
 
 from math import nan
 
+import shutil
+
 
 class LineChart:
     """Line Charts in terminal."""
@@ -112,7 +114,7 @@ class LineChart:
         # --- PRE-RENDER AREA --- #
         ###########################
         # --- The screen measures are obtained --- #
-        screen_x, screen_y = widgets.measure_screen()
+        screen_x, screen_y = shutil.get_terminal_size()
 
         # --- Values of chart_window are calculated. ---#
         chart_window_x = screen_x - left_margin_width
