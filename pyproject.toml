@@ -1,27 +1,29 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
-
-[options]
-package_dir = "outfancy"
-packages = ["outfancy"]
 
 [project]
 name = "outfancy"
 version = "0.8.0"
 authors = [
-    {name = "Carlos A. Planchón", email = "carlosandresplanchonprestes@gmail.com"}
+  { name = "Carlos A. Planchón", email = "carlosandresplanchonprestes@gmail.com" }
 ]
 description = "Python3.11+ library to print tables and line charts in Terminal."
-classifiers = [
-    "Intended Audience :: Developers",
-    "Topic :: Software Development :: Build Tools",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.11",
-]
-license = {text = "MIT License"}
-keywords = ["rendering", "graphical", "terminal", "chart", "graph"]
 readme = "README.md"
+requires-python = ">=3.11"
+
+license = "MIT"
+license-files = ["LICENSE"]
+
+keywords = ["rendering", "graphical", "terminal", "chart", "graph"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "Programming Language :: Python :: 3.11",
+]
 
 [project.urls]
-repository = "https://github.com/carlosplanchon/outfancy.git"
+Repository = "https://github.com/carlosplanchon/outfancy.git"
+
+[tool.setuptools]
+packages = ["outfancy"]
