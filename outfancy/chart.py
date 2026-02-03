@@ -10,21 +10,21 @@ import shutil
 
 class LineChart:
     """Line Charts in terminal."""
-    def __init__(self):
-        self.dataset_space = []
-        self.x_min = 0
-        self.x_max = 0
-        self.y_min = 0
-        self.y_max = 0
+    def __init__(self) -> None:
+        self.dataset_space: list[list[list[int | float]]] = []
+        self.x_min: int | float = 0
+        self.x_max: int | float = 0
+        self.y_min: int | float = 0
+        self.y_max: int | float = 0
 
-    def get_list_of_elements(self, table):
+    def get_list_of_elements(self, table: list[tuple[int | float, int | float]]) -> tuple[list[int | float], list[int | float]]:
         # It return a list of x and a list of y values.
         return [x[0] for x in table], [x[1] for x in table]
 
-    def clear(self):
+    def clear(self) -> None:
         self.dataset_space = []
 
-    def plot(self, dataset):
+    def plot(self, dataset: list[tuple[int | float, int | float]]) -> str | None:
         # The data is checked.
         integrity, reason = self.check_data_integrity(dataset)
         if not integrity:
@@ -47,7 +47,7 @@ class LineChart:
 
         self.dataset_space.append([x_values, y_values])
 
-    def get_char_slope(self, slope, color, color_number):
+    def get_char_slope(self, slope: float, color: bool, color_number: int) -> str:
         """We generate a point character to plot based on slope."""
         if slope != slope:  # NaN check (NaN != NaN is True)
             return '|'
@@ -65,7 +65,7 @@ class LineChart:
                 f'{point_character}\x1b[0;99m'
         return point_character
 
-    def y_interpolate(self, interpolated_points, point_character):
+    def y_interpolate(self, interpolated_points: list[list], point_character: str) -> list[list]:
         """Interpolate Y axis to fill vertical gaps."""
         i = 0
         while i < len(interpolated_points) - 1:

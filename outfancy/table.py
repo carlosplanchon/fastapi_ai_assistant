@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+from typing import Any
 
 from . import widgets
 
@@ -23,7 +24,7 @@ class Table:
     Table allow to render a table with nice format, the data input have to
     accomplish the format [(1, 'foo'), (2, 'bar')].
     """
-    def __init__(self):
+    def __init__(self) -> None:
         #################################
         # --- Rendering parameters. --- #
         #################################
@@ -224,18 +225,18 @@ class Table:
 
     def render(
         self,
-        data=None,
-        separator=None,
-        label_list=None,
-        order=None,
-        data_type_list=None,
-        priority_list=None,
-        width=None,
-        row_separator=None,
-        page=None,
-        screen_x=None,
-        screen_y=None,
-            ):
+        data: list[tuple] | None = None,
+        separator: str | None = None,
+        label_list: list[str] | bool | None = None,
+        order: list[int] | None = None,
+        data_type_list: list[str] | None = None,
+        priority_list: list[int] | None = None,
+        width: list[int] | bool | None = None,
+        row_separator: str | None = None,
+        page: int | None = None,
+        screen_x: int | None = None,
+        screen_y: int | None = None,
+            ) -> str:
 
         """
         Render receives six (6) parameters, and is responsible for the
@@ -1668,9 +1669,9 @@ class Oneline:
     - Oneline creates an instance of Table, configurating it on a way that
         enable it to work line by line.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         # The table object is generated. (as instance of Table).
-        self.table = Table()
+        self.table: Table = Table()
         self.table.set_maximum_number_of_rows(1)
         self.table.set_row_separator_before_table(False)
 
@@ -1753,14 +1754,14 @@ class Oneline:
 
     def render(
         self,
-        data=None,
-        width=None,
-        separator=None,
-        order=None,
-        priority_list=None,
-        screen_x=None,
-        screen_y=None
-            ):
+        data: list[tuple] | tuple | None = None,
+        width: list[int] | bool | None = None,
+        separator: str | None = None,
+        order: list[int] | None = None,
+        priority_list: list[int] | None = None,
+        screen_x: int | None = None,
+        screen_y: int | None = None
+            ) -> str:
         """
         Function that prints a line in each execution, based in
         provided data and configuration.
@@ -1887,14 +1888,14 @@ class LargeTable:
     - The parameters that can be assigned to render function are the
         same as Table class.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         # The motor object is generated. (as instance of Table)
-        self.table = Table()
+        self.table: Table = Table()
         self.table.set_maximum_number_of_rows(1)
         self.table.set_row_separator_before_table(False)
 
         # Numbers of rows to process before the table printing.
-        self.rows_to_analyze = 100
+        self.rows_to_analyze: int = 100
 
     def set_check_data(self, x=False):
         """
@@ -1975,15 +1976,15 @@ class LargeTable:
 
     def render(
         self,
-        data=None,
-        separator=None,
-        label_list=None,
-        order=None,
-        data_type_list=None,
-        priority_list=None,
-        width=None,
-        row_separator=None
-            ):
+        data: list[tuple] | None = None,
+        separator: str | None = None,
+        label_list: list[str] | bool | None = None,
+        order: list[int] | None = None,
+        data_type_list: list[str] | None = None,
+        priority_list: list[int] | None = None,
+        width: list[int] | bool | None = None,
+        row_separator: str | None = None
+            ) -> str | None:
 
         """Render receive six (6) parameters, and is responsible for the render
         of the data in a table on an organized way.
