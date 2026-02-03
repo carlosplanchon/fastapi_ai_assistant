@@ -1343,28 +1343,25 @@ class Table:
                 after = width[column]
                 frame = []
                 field_to_process = str(rearranged_data[the_tuple][column])
+                # Cache the length to avoid repeated calls
+                field_len = widgets.printed_length(field_to_process)
                 # --- While frame´s length is greater
                 # than column width, it is cutted. --- #
                 if width[column] > 0:
                     # If width[column] is equal or less than 0,
                     # it will be cutted infinitely.
-                    while widgets.printed_length(
-                        field_to_process
-                            ) > width[column]:
+                    while field_len > width[column]:
                         frame.append(field_to_process[:after])
                         field_to_process = field_to_process[after:]
+                        field_len = widgets.printed_length(field_to_process)
                 # --- If field_to_process and width[column] are equals,
                 # the frame is appended without any process. --- #
-                if widgets.printed_length(field_to_process) == width[column]:
+                if field_len == width[column]:
                     frame.append(field_to_process)
                 # --- If the content of the frame to cut is lower than column
                 # width the required space is filled of whitespaces. --- #
-                if widgets.printed_length(field_to_process) < width[column]:
-                    after_space = ' ' * (
-                        width[column] - widgets.printed_length(
-                            field_to_process
-                            )
-                        )
+                elif field_len < width[column]:
+                    after_space = ' ' * (width[column] - field_len)
                     frame.append(f'{field_to_process}{after_space}')
                 # --- The generated frame is cutted in function of
                 # max_heigth_of_a_tuple (maximum heigth). --- #
@@ -2084,8 +2081,14 @@ class LargeTable:
 
         # --- Check the maximum length required to
         # show each field of rearranged_data. --- #
+        # For LargeTable, we need to calculate maximum from ALL data,
+        # not just the analyzed sample, to ensure consistent rendering
+        rearranged_full_data = self.table.rearrange_data(
+            data=data,
+            order=order
+            )
         maximum = self.table.check_maximums(
-            rearranged_data=rearranged_data
+            rearranged_data=rearranged_full_data
             )
 
         # --- The integrity of data_type_list is checked --- #
@@ -2252,4 +2255,4 @@ class LargeTable:
                 rearranged_row.append(row[element])
 
         # The rearranged row is returned.
-        return row
+        return rearranged_row
