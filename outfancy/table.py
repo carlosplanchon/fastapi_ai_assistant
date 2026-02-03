@@ -14,6 +14,7 @@ import shutil
 # Configure library logger
 logger = logging.getLogger('outfancy')
 logger.setLevel(logging.WARNING)  # Default to WARNING, users can change
+logger.propagate = False  # Don't propagate to root logger (avoid duplicates)
 
 # Only add handler if none exists (avoid duplicate handlers)
 if not logger.handlers:
@@ -601,9 +602,9 @@ class Table:
         # --- The validity of provided order is checked
         # based on his properties. --- #
         if not isinstance(order, list):
-            logger.error(
+            logger.debug(
                 'Table > Render > check_order: '
-                'The order is invalid or was not provided.'
+                'order not provided, auto-generating from data structure'
                 )
             if len(data) > 0:
                 order = [x for x in range(len(data[0]))]
@@ -715,9 +716,9 @@ class Table:
 
         # An error is emitted if data_type_list is not provided.
         if data_type_list is None:
-            logger.error(
+            logger.debug(
                 'Table > Render > check_data_type_list_integrity: '
-                'data_type_list was not provided.'
+                'data_type_list not provided, will auto-detect column types'
                 )
 
         # --- List of columns numbers whose
@@ -919,9 +920,9 @@ class Table:
                     data_type_list[x] = the_type
 
             if len(to_rebuild) > 0:
-                logger.warning(
+                logger.info(
                     'Table > Render > check_data_type_list_integrity: '
-                    'data_type_list was rebuilded of modified.'
+                    'column types auto-detected successfully'
                     )
 
             # The data_type_list is returned.
@@ -995,9 +996,9 @@ class Table:
         # If priority_list is None.
         if not isinstance(priority_list, list):
             rebuild = True
-            logger.error(
+            logger.debug(
                 'Table > Render > check_priority_list: '
-                'priority_list was not provided or is not valid.'
+                'priority_list not provided, will auto-assign based on column types'
                 )
         else:
             # Length of priority_list.
@@ -1501,9 +1502,9 @@ class Table:
         # List of elements that have to be rebuilded.
         to_rebuild = []
         if not isinstance(label_list, list):
-            logger.warning(
+            logger.debug(
                 'Table > Render > check_label_list: '
-                'label_list was not provided or it is invalid.'
+                'label_list not provided, will auto-generate from column types'
                 )
             # If the type of label_list is not a list, a new list
             # is generated, and it is filled by None.
@@ -1559,9 +1560,7 @@ class Table:
                 label_list[x] = f'Col.{x}'
 
         if len(to_rebuild) > 0:
-            logger.warning(
-                'Table > Render > check_label_list: label_list was rebuilt.'
-                )
+            logger.info('Table > Render > check_label_list: label_list auto-generated successfully')
 
         # Check if order is provided, if it is not, an error is emmited,
         # else, the labels are rearranged.
