@@ -11,6 +11,20 @@ from string import ascii_letters
 
 import shutil
 
+# Configure library logger
+logger = logging.getLogger('outfancy')
+logger.setLevel(logging.WARNING)  # Default to WARNING, users can change
+
+# Only add handler if none exists (avoid duplicate handlers)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
 
 logging.basicConfig(
     # filename='/tmp/outfancy/latest.log',
@@ -187,41 +201,50 @@ class Table:
         """
         self.row_separator_before_table = x
 
-    def show_check_data(self):
-        """It shows the value of the variable check_data."""
-        print(self.check_data)
+    def show_check_data(self) -> bool:
+        """Returns the value of check_data."""
+        logger.debug(f"check_data = {self.check_data}")
+        return self.check_data
 
-    def show_check_table_size(self):
-        """It shows the value of the variable check_table_size."""
-        print(self.check_table_size)
+    def show_check_table_size(self) -> bool:
+        """Returns the value of check_table_size."""
+        logger.debug(f"check_table_size = {self.check_table_size}")
+        return self.check_table_size
 
-    def show_corrector(self):
-        """It shows the value of the corrector."""
-        print(self.corrector)
+    def show_corrector(self) -> int:
+        """Returns the value of corrector."""
+        logger.debug(f"corrector = {self.corrector}")
+        return self.corrector
 
-    def show_max_heigth_of_a_tuple(self):
-        """It shows the value of the variable max_heigth_of_a_tuple."""
-        print(self.max_heigth_of_a_tuple)
+    def show_max_heigth_of_a_tuple(self) -> int:
+        """Returns the value of max_heigth_of_a_tuple."""
+        logger.debug(f"max_heigth_of_a_tuple = {self.max_heigth_of_a_tuple}")
+        return self.max_heigth_of_a_tuple
 
-    def show_analyze_threshold(self):
-        """It shows the value of the variable analyze_threshold."""
-        print(self.analyze_threshold)
+    def show_analyze_threshold(self) -> int:
+        """Returns the value of analyze_threshold."""
+        logger.debug(f"analyze_threshold = {self.analyze_threshold}")
+        return self.analyze_threshold
 
-    def show_show_width_threshold(self):
-        """It shows the value of the variable show_width_threshold."""
-        print(self.show_width_threshold)
+    def show_show_width_threshold(self) -> bool:
+        """Returns the value of show_width_threshold."""
+        logger.debug(f"show_width_threshold = {self.show_width_threshold}")
+        return self.show_width_threshold
 
-    def show_show_labels(self):
-        """It shows the value of the variable show_labels."""
-        print(self.show_labels)
+    def show_show_labels(self) -> bool:
+        """Returns the value of show_labels."""
+        logger.debug(f"show_labels = {self.show_labels}")
+        return self.show_labels
 
-    def show_maximum_number_of_rows(self):
-        """It shows the value of the variable maximum_number_of_rows."""
-        print(self.maximum_number_of_rows)
+    def show_maximum_number_of_rows(self) -> int:
+        """Returns the value of maximum_number_of_rows."""
+        logger.debug(f"maximum_number_of_rows = {self.maximum_number_of_rows}")
+        return self.maximum_number_of_rows
 
-    def show_row_separator_before_table(self):
-        """It shows the value of the variable row_separator_before_table."""
-        print(self.row_separator_before_table)
+    def show_row_separator_before_table(self) -> bool:
+        """Returns the value of row_separator_before_table."""
+        logger.debug(f"row_separator_before_table = {self.row_separator_before_table}")
+        return self.row_separator_before_table
 
     def render(
         self,
@@ -493,7 +516,7 @@ class Table:
                 error = True
 
         if error:
-            logging.error(
+            logger.error(
                 '--- Table > Render > check_data_integrity: '
                 'Corrupt or invalid data ---'
                 )
@@ -511,7 +534,7 @@ class Table:
         # It checks if the length of the separator is greater than
         # screen width, if it is the case, the separator is shortened.
         elif widgets.printed_length(separator) > screen_x:
-            logging.error(
+            logger.error(
                 'Table > Render > check_separator: '
                 'The provided separator is invalid.'
                 )
@@ -570,7 +593,7 @@ class Table:
         if is not, it will try to rebuild it.
         """
         if data is None:
-            logging.error(
+            logger.error(
                 'Table > Render > check_order: Data was not provided.'
                 )
             return []
@@ -578,7 +601,7 @@ class Table:
         # --- The validity of provided order is checked
         # based on his properties. --- #
         if not isinstance(order, list):
-            logging.error(
+            logger.error(
                 'Table > Render > check_order: '
                 'The order is invalid or was not provided.'
                 )
@@ -634,7 +657,7 @@ class Table:
                 if widgets.index_is_in_list(the_list=the_tuple, index=element):
                     new_tuple.append(the_tuple[element])
                 else:
-                    logging.error(
+                    logger.error(
                         'Table > Render > rearrange_data: '
                         'Error when trying to rearrange data.'
                         )
@@ -667,7 +690,7 @@ class Table:
                         maximum[element] = field_printed_length
             return maximum
         else:
-            logging.error(
+            logger.error(
                 'Table > Render > check_maximums: '
                 'Error when trying to check maximums.'
                 )
@@ -692,7 +715,7 @@ class Table:
 
         # An error is emitted if data_type_list is not provided.
         if data_type_list is None:
-            logging.error(
+            logger.error(
                 'Table > Render > check_data_type_list_integrity: '
                 'data_type_list was not provided.'
                 )
@@ -714,14 +737,14 @@ class Table:
             # of columns of the data the list is shortened.
             if len(data_type_list) > len(data[0]):
                 data_type_list = data_type_list[:len(data[0])]
-                logging.warning(
+                logger.warning(
                     'Table > Render > check_data_type_list_integrity: '
                     'data_type_list was shortened.'
                     )
             # If it is shorter, missing elements of
             # data_type_list are filled with None.
             elif len(data_type_list) < len(data[0]):
-                logging.warning(
+                logger.warning(
                     'Table > Render > check_data_type_list_integrity: '
                     'data_type_list is too short.'
                     )
@@ -896,7 +919,7 @@ class Table:
                     data_type_list[x] = the_type
 
             if len(to_rebuild) > 0:
-                logging.warning(
+                logger.warning(
                     'Table > Render > check_data_type_list_integrity: '
                     'data_type_list was rebuilded of modified.'
                     )
@@ -916,7 +939,7 @@ class Table:
         # If order is not provided, or if it is not list,
         # data_type_list is returned.
         if not isinstance(order, list):
-            logging.error(
+            logger.error(
                 'Table > Render > rearrange_data_type_list: '
                 'The order was not provided or is not valid.'
                 )
@@ -931,7 +954,7 @@ class Table:
                         ):
                     rearranged_data_type_list.append(data_type_list[element])
                 else:
-                    logging.error(
+                    logger.error(
                         'Table > Render > rearrange_data_type_list: '
                         'Error when trying to rearrange data_type_list.'
                         )
@@ -972,7 +995,7 @@ class Table:
         # If priority_list is None.
         if not isinstance(priority_list, list):
             rebuild = True
-            logging.error(
+            logger.error(
                 'Table > Render > check_priority_list: '
                 'priority_list was not provided or is not valid.'
                 )
@@ -991,7 +1014,7 @@ class Table:
             # If len_priority_list is greater than
             # rearranged_data_type_list, rebuild = True.
             if len_priority_list > len_rearranged_data_type_list:
-                logging.warning(
+                logger.warning(
                     'Table > Render > check_priority_list: '
                     'priority_list is too long.'
                     )
@@ -1000,7 +1023,7 @@ class Table:
             # If len_priority_list is shorter than
             # rearranged_data_type_list, rebuild = True.
             if len_priority_list < len_rearranged_data_type_list:
-                logging.warning(
+                logger.warning(
                     'Table > Render > check_priority_list: '
                     'priority_list is too short.'
                     )
@@ -1011,7 +1034,7 @@ class Table:
                 if x >= len_rearranged_data_type_list or x < 0:
                     rebuild = True
                 if rebuild:
-                    logging.warning(
+                    logger.warning(
                         'Table > Render > check_priority_list: '
                         'priority_list is not valid.'
                         )
@@ -1055,7 +1078,7 @@ class Table:
             #   the missing elements of the lists
             #   are filled with minimal priorities.
             if len(priority_list) < len_rearranged_data_type_list:
-                logging.warning(
+                logger.warning(
                     'Table > Render > check_priority_list: '
                     'rearranged_data_type_list have uncategorizable elements.'
                     )
@@ -1083,7 +1106,7 @@ class Table:
         # it will be asigned to 1 and an error will be emitted.
         if not isinstance(len_separator, int) or len_separator < 0:
             len_separator = 1
-            logging.error(
+            logger.error(
                 'Table > Render > assign_column_width: '
                 'len_separator was not provided or it is invalid.'
                 )
@@ -1099,7 +1122,7 @@ class Table:
         # If len_order is not provided or is less than 0,
         # it will be asigned to 1 and an error will be emitted.
         if not isinstance(len_order, int) or len_order < 0:
-            logging.error(
+            logger.error(
                 'Table > Render > assign_column_width: '
                 'len_order was not provided or it is invalid.'
                 )
@@ -1165,7 +1188,7 @@ class Table:
         # IBM Cards, World War II), and an error is emitted).
         if not isinstance(screen_x, int) or screen_x < 1:
             screen_x = 80
-            logging.warning(
+            logger.warning(
                 'Table > Render > assign_column_width: '
                 'screen_x was not provided or it is invalid.'
                 )
@@ -1176,7 +1199,7 @@ class Table:
         c2 = self.show_width_threshold < 1
         if not c1 or c2:
             self.show_width_threshold = 5
-            logging.warning(
+            logger.warning(
                 'Table > Render > assign_column_width: '
                 'show_width_threshold was not provided or it is invalid.'
                 )
@@ -1187,7 +1210,7 @@ class Table:
         # error is emitted and maximum is rebuilded.
         c1 = isinstance(maximum, list)
         if not c1 or ordered_priority_list is False or width is False:
-            logging.warning(
+            logger.warning(
                 'Table > Render > assign_column_width: '
                 'Maximum was not provided or it is invalid.'
                 )
@@ -1311,7 +1334,7 @@ class Table:
         """Generate the table frames, where the text is contained."""
         # --- If data is not provided, an empty list is returned --- #
         if rearranged_data is None:
-            logging.error(
+            logger.error(
                 'Table > Render > generate_table_frames: '
                 'rearranged_data was not provided.'
                 )
@@ -1320,7 +1343,7 @@ class Table:
         # --- If column width list was not provided,
         # an empty list is returned. --- #
         if width is None:
-            logging.error(
+            logger.error(
                 'Table > Render > generate_table_frames: '
                 'Column width list was not provided.'
                 )
@@ -1328,7 +1351,7 @@ class Table:
 
         # --- If maximums list is not provided, an empty list is returned --- #
         if maximum is None:
-            logging.error(
+            logger.error(
                 'Table > Render > generate_table_frames: '
                 'maximums list was not provided.'
                 )
@@ -1410,7 +1433,7 @@ class Table:
 
         # If separator is not provided is assigned by default to " ".
         if separator is None:
-            logging.warning(
+            logger.warning(
                 'Table > Render > generate_pre_table: '
                 'searator was not provided.'
                 )
@@ -1478,7 +1501,7 @@ class Table:
         # List of elements that have to be rebuilded.
         to_rebuild = []
         if not isinstance(label_list, list):
-            logging.warning(
+            logger.warning(
                 'Table > Render > check_label_list: '
                 'label_list was not provided or it is invalid.'
                 )
@@ -1496,7 +1519,7 @@ class Table:
 
         # If separator is not provided, it will be restored to ' '.
         if separator is None:
-            logging.warning(
+            logger.warning(
                 'Table > Render > check_label_list: '
                 'The separator was not provided.'
                 )
@@ -1506,12 +1529,12 @@ class Table:
         # label_list is shortened.
         if len(label_list) > len(data_type_list):
             label_list = label_list[:len(data_type_list)]
-            logging.warning(
+            logger.warning(
                 'Table > Render > check_label_list: label_list was shortened.'
                 )
         # Else, the missing elements are filled by None.
         elif len(label_list) < len(data_type_list):
-            logging.warning(
+            logger.warning(
                 'Table > Render > check_label_list: label_list is too short.'
                 )
             for x in range(len(label_list), len(data_type_list)):
@@ -1536,14 +1559,14 @@ class Table:
                 label_list[x] = f'Col.{x}'
 
         if len(to_rebuild) > 0:
-            logging.warning(
+            logger.warning(
                 'Table > Render > check_label_list: label_list was rebuilt.'
                 )
 
         # Check if order is provided, if it is not, an error is emmited,
         # else, the labels are rearranged.
         if not isinstance(order, list):
-            logging.warning(
+            logger.warning(
                 'Table > Render > check_label_list: '
                 'Order was not provided or it is invalid.'
                 )
@@ -1557,7 +1580,7 @@ class Table:
                         ):
                     ordered_label_list.append(label_list[element])
                 else:
-                    logging.warning(
+                    logger.warning(
                         'Table > Render > check_label_list: '
                         'Error when trying to rearrange the labels.'
                         )
@@ -1565,7 +1588,7 @@ class Table:
         # If width is not provided, an error is emitted and label_list
         # (integrated with separator) is returned.
         if width is None:
-            logging.error(
+            logger.error(
                 'Table > Render > check_label_list: '
                 'Width list was not provided.'
                 )
@@ -1604,7 +1627,7 @@ class Table:
         """
         # If pre_table is not provided an error is emitted.
         if pre_table is None:
-            logging.error(
+            logger.error(
                 'Table > Render > post_render: pre_table was not provided, '
                 'this can occur if the data is not valid.'
                 )
@@ -1613,7 +1636,7 @@ class Table:
         # If the length of separator is not provided, an error is emitted
         # and the variable is assigned to 1.
         if len_separator is None:
-            logging.warning(
+            logger.warning(
                 'Table > Render > post_render: '
                 'len_separator was not provided.'
                 )
@@ -1622,7 +1645,7 @@ class Table:
         # If label_list is not provided, it is asigned to False,
         # and it not will showed.
         if label_list is None:
-            logging.warning(
+            logger.warning(
                 'Table > Render > post_render: '
                 'label_list was not provided.'
                 )
@@ -1984,7 +2007,7 @@ class LargeTable:
         priority_list: list[int] | None = None,
         width: list[int] | bool | None = None,
         row_separator: str | None = None
-            ) -> str | None:
+            ) -> str:
 
         """Render receive six (6) parameters, and is responsible for the render
         of the data in a table on an organized way.
@@ -2019,8 +2042,11 @@ class LargeTable:
         #######################################
         # --- INTEGRITY CHECK IN THE DATA --- #
         #######################################
+        logger.debug("Starting Table.render()")
+
         # --- The existence of data is checked --- #
         if data is None:
+            logger.error("Table.render() called without data")
             return '--- Table > Render: Data to print was not provided. ---'
 
         # --- Handling for empty data --- #
@@ -2149,10 +2175,13 @@ class LargeTable:
         # --- POST-RENDER AREA --- #
         ############################
 
-        # --- The label_list is printed --- #
-        print(f'\x1b[1;33m{label_list}\x1b[0;99m')
+        logger.debug(f"LargeTable rendering {len(data)} rows")
+        output_lines = []
 
-        # --- Each row is processed and printed --- #
+        # --- The label_list is added to output --- #
+        output_lines.append(f'\x1b[1;33m{label_list}\x1b[0;99m')
+
+        # --- Each row is processed --- #
         for x_row in range(len(data)):
             #                         #
             # --- PRE-RENDER AREA --- #
@@ -2190,7 +2219,10 @@ class LargeTable:
             #                          #
             # --- POST-RENDER AREA --- #
             #                          #
-            print(pre_table)
+            output_lines.append(pre_table)
+
+        logger.info(f"LargeTable rendered {len(data)} rows successfully")
+        return '\n'.join(output_lines)
 
     def demo(self):
         """Demonstration function."""
