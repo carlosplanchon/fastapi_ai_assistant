@@ -35,15 +35,18 @@ def compress_list(list_to_compress):
 
     # Num used to fill compressed_list.
     num = 0
-    # It walks the numbers from zero to maximum present in the list
-    # list_to_compress.
-    for x in range(max(list_to_compress) + 1):
-        # If x (the minimal number in list_to_compress + x) is in
-        # the list list_to_compress.
-        number = min(list_to_compress) + x
+    # Calculate the range properly for both positive and negative numbers
+    min_val = min(list_to_compress)
+    max_val = max(list_to_compress)
+    range_size = max_val - min_val + 1
+
+    # It walks the numbers from minimum to maximum present in the list
+    for x in range(range_size):
+        # Calculate the actual number we're checking
+        number = min_val + x
         if number in list_to_compress:
-            # num is added to compresed list in the index that is
-            # occupied by the minimal number of list_to_compress.
+            # num is added to compressed list in the index that is
+            # occupied by the first occurrence of this number
             compressed_list[list_to_compress.index(number)] = num
             num += 1
 
@@ -111,8 +114,14 @@ def normalise_date(text):
 
 def remove_colors(text):
     """This function remove the ANSI color codes of a string."""
+    # More comprehensive regex that handles:
+    # - Basic colors: \x1b[31m
+    # - Bold/styles: \x1b[1;32m
+    # - 256 colors: \x1b[38;5;123m
+    # - True RGB: \x1b[38;2;255;0;0m
+    # - Any sequence length with semicolons
     return sub(
-        r"\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?",
+        r"\x1b\[[0-9;]*[mKHfABCDsuJSTG]?",
         "",
         text
     )
