@@ -2202,7 +2202,11 @@ class LargeTable:
             )
         self.render(1000 * dataset)
 
-    def get_final_order_list(self, order_list=None, data=None):
+    def get_final_order_list(
+        self,
+        order_list: list[list[int]] | None = None,
+        data: list[tuple] | None = None
+    ) -> list[int] | str:
         """
         It takes the original order and get the final order list,
         data will be rearranged taking as parameter only this final
@@ -2236,14 +2240,21 @@ class LargeTable:
             # base_list is now the finished new_list.
             base_list = new_list
 
-    def rearrange_row(self, row=None, order=None):
+        # Return the final order list
+        return base_list
+
+    def rearrange_row(
+        self,
+        row: tuple | None = None,
+        order: list[int] | None = None
+    ) -> list | tuple | str:
         """
         It rearranges a row based on provided order.
         """
         # Check if row was provided, if not, return an error.
         if row is None:
-            return '--- LargeTable > get_final_order_list:'\
-                   'data_to_analyze was not received. ---'
+            return '--- LargeTable > rearrange_row: '\
+                   'row was not received. ---'
 
         # If order was not provided or if is not a list,
         # row will be returned without rearrange.
