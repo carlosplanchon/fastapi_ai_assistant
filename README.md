@@ -2,11 +2,7 @@
 
 *Table printing and Line plotting in Terminal*
 
-<img src='examples/chart_auto.png'>
-
-## Demonstration
-- http://showterm.io/42f0bfa286232758acf18
-- http://showterm.io/5a31927cbfdc37e116f8d
+<img src='https://raw.githubusercontent.com/carlosplanchon/outfancy/refs/heads/master/examples/chart_auto.png'>
 
 ## what is it?
 Outfancy is a Python 3.11+ library for printing tables in the terminal. It’s a quick way to visualize data when you don’t have a GUI, and it integrates easily into your programs. You can install it with pip and use it anywhere.
@@ -65,5 +61,5 @@ print(line_chart.render(color=True))
 - https://gist.github.com/carlosplanchon/986c7c11a932a7206bb3 (Funny demo with colors)
 
 ## Experimental (Line Chart)
-<img src='examples/sin_little_2.png'>
-- http://showterm.io/80074a1806e78205339d6
+<img src='https://raw.githubusercontent.com/carlosplanchon/outfancy/refs/heads/master/examples/sin_little_2.png'>
+
