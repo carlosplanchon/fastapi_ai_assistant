@@ -233,6 +233,8 @@ class Table:
         width=None,
         row_separator=None,
         page=None,
+        screen_x=None,
+        screen_y=None,
             ):
 
         """
@@ -302,7 +304,12 @@ class Table:
         # --- PRE-RENDER AREA --- #
         ###########################
         # --- The screen measures are obtained. --- #
-        screen_x, screen_y = shutil.get_terminal_size()
+        if screen_x is None or screen_y is None:
+            screen_x_temp, screen_y_temp = shutil.get_terminal_size()
+            if screen_x is None:
+                screen_x = screen_x_temp
+            if screen_y is None:
+                screen_y = screen_y_temp
 
         # --- The correction value is applied to screen_x. --- #
         screen_x += self.corrector
@@ -523,11 +530,12 @@ class Table:
 
         # It checks if the length of the row_separator is less
         # than screen width, if it is, the row_separator is corrected.
-        if widgets.printed_length(row_separator) < screen_x:
+        row_separator_len = widgets.printed_length(row_separator)
+        if 0 < row_separator_len < screen_x:
             row_separator_w_c = widgets.remove_colors(row_separator)
 
             row_separator_screen_amt = int(
-                screen_x / widgets.printed_length(row_separator)
+                screen_x / row_separator_len
                 )
 
             row_separator = f'{row_separator}'\
@@ -811,9 +819,8 @@ class Table:
                         # --- If is not numeric, time, or date,
                         # it is assumed that is a text --- #
                         else:
-                            if widgets.printed_length(
-                                field
-                                    ) > self.chk_dlti_num_letters_in_field:
+                            field_len = widgets.printed_length(field)
+                            if field_len > self.chk_dlti_num_letters_in_field:
                                 num_letters = 0
                                 # The number of letters in the
                                 # element is counted.
@@ -823,10 +830,8 @@ class Table:
                                 # If the field have 90% or more of letters
                                 # its assumed that it is a name.
                                 c_if = self.chk_dlti_pecentage_letters_in_field
-                                if (
-                                    num_letters * 100 / widgets.printed_length(
-                                        field
-                                        )
+                                if field_len > 0 and (
+                                    num_letters * 100 / field_len
                                         ) > c_if:
                                     the_type = 'name'
                                 else:
@@ -861,12 +866,13 @@ class Table:
                     # --- The analysis data is processed and
                     # integrated to priority list --- #
                     # The percentages of each type over analyze are obtained.
-                    date_type *= 100 / analyze
-                    time_type *= 100 / analyze
-                    id_type *= 100 / analyze
-                    value_type *= 100 / analyze
-                    name_type *= 100 / analyze
-                    desc_type *= 100 / analyze
+                    if analyze > 0:
+                        date_type *= 100 / analyze
+                        time_type *= 100 / analyze
+                        id_type *= 100 / analyze
+                        value_type *= 100 / analyze
+                        name_type *= 100 / analyze
+                        desc_type *= 100 / analyze
                     # --- It follows that the resulting type is based
                     # in the correspondency of results with the thresholding.
                     if date_type >= self.chk_dtli_date:

@@ -8,13 +8,13 @@ from time import strptime
 def actual_date():
     """This function return the actual date."""
     now = datetime.now()
-    return f"{now.day}-{now.month}-{now.year}"
+    return f"{now.day:02d}-{now.month:02d}-{now.year}"
 
 
 def actual_hour():
     """This function return the actual hour."""
     now = datetime.now()
-    return f"{now.hour}:{now.minute}:{now.second}"
+    return f"{now.hour:02d}:{now.minute:02d}:{now.second:02d}"
 
 
 def compress_list(list_to_compress):

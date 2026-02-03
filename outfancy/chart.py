@@ -49,7 +49,7 @@ class LineChart:
 
     def get_char_slope(self, slope, color, color_number):
         """We generate a point character to plot based on slope."""
-        if slope is nan:
+        if slope != slope:  # NaN check (NaN != NaN is True)
             return '|'
         if slope > 2 or slope < -2:
             point_character = '|'
@@ -66,7 +66,7 @@ class LineChart:
         return point_character
 
     def y_interpolate(self, interpolated_points, point_character):
-        """|
+        """Interpolate Y axis to fill vertical gaps."""
         i = 0
         while i < len(interpolated_points) - 1:
             actual_point = interpolated_points[i]
@@ -93,7 +93,6 @@ class LineChart:
                     ] + y_interpolated_points\
                     + interpolated_points[i:]
             i += len(y_interpolated_points) + 1
-        """
         return interpolated_points
 
     def render(
@@ -131,10 +130,8 @@ class LineChart:
         if chart_window_y - 1 != 0:
             y_points_per_y_pixel = chart_window_y_range / (chart_window_y - 1)
         else:
-            x_points_per_x_pixel = 1
+            y_points_per_y_pixel = 1
 
-        print(x_points_per_x_pixel)
-        print(y_points_per_y_pixel)
         #######################
         # --- RENDER AREA --- #
         #######################
@@ -237,6 +234,8 @@ class LineChart:
                     point_index = 0
                     # We start our walk.
                     while point_index < len(chart_screen_points):
+                        # Initialize to avoid NameError if no interpolation happens
+                        interpolated_points = []
                         # We mark the actual point as the point_index we are.
                         actual_point = chart_screen_points[point_index]
 

@@ -29,7 +29,8 @@ class Window:
 
     def insert_point(self, point_character, x_coord, y_coord):
         """Each element of the matrix is inserted in the window."""
-        self.content[y_coord][x_coord] = point_character
+        if 0 <= y_coord < len(self.content) and 0 <= x_coord < len(self.content[0]):
+            self.content[y_coord][x_coord] = point_character
 
     def render(self):
         return '\n'.join([''.join(x) for x in self.content])
