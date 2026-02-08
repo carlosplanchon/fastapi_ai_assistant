@@ -8,7 +8,7 @@
 
 Outfancy is a Python 3.11+ library for printing tables and charts in the terminal. It's a quick way to visualize data when you don't have a GUI, and it integrates easily into your programs. You can install it with uv or pip and use it anywhere.
 
-This was the first library I ever built—when I was 16 :). It's been modernized to support Python 3.11-3.14, fix bugs, add type hints, improve logging, and enhance performance, but the original style is still there: raw, exploratory teenage code.
+This was the first library I ever built when I was 16 :). It's been modernized to support Python 3.11-3.14, fix bugs, add type hints, improve logging, and enhance performance, but the original style is still there: raw, exploratory teenage code.
 
 ## Documentation
 
